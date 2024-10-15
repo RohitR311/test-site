@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Static Data Table</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 90%;
+        margin: 20px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Country</th>
+          <th>Zip Code</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- Rows will be inserted here by JavaScript -->
+      </tbody>
+    </table>
+    <script>
+      const tableBody = document.getElementById("table-body");
+
+      for (let i = 1; i <= 1000; i++) {
+        const row = document.createElement("tr");
+
+        for (let j = 1; j <= 10; j++) {
+          const cell = document.createElement("td");
+          cell.textContent = `Data ${i}-${j}`;
+          row.appendChild(cell);
+        }
+
+        tableBody.appendChild(row);
+      }
+    </script>
+  </body>
+</html>
