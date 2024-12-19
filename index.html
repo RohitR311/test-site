@@ -15,6 +15,9 @@
         min-height: 100vh;
         background-color: #f0f0f0;
       }
+      .container {
+        width: 90%;
+      }
       table {
         border-collapse: collapse;
         width: 90%;
@@ -37,25 +40,33 @@
     </style>
   </head>
   <body>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Address</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Country</th>
-          <th>Zip Code</th>
-          <th>Comments</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <!-- Rows will be inserted here by JavaScript -->
-      </tbody>
-    </table>
+    <div class="container">
+      <label for="appointment-time">Choose an appointment time: </label>
+      <input
+        id="appointment-time"
+        type="time"
+        name="appointment-time"
+        value="13:30" />
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Zip Code</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
     <script>
       const tableBody = document.getElementById("table-body");
 
