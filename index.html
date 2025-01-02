@@ -1,98 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shadow DOM Table</title>
+    <title>Static Data Table</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+      }
+      .container {
+        width: 90%;
+      }
+      table {
+        border-collapse: collapse;
+        width: 90%;
+        margin: 20px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
     </style>
-</head>
-<body>
-    <div id="root-container"></div>
-
+  </head>
+  <body>
+    <div class="container">
+      <label for="appointment-time">Choose an appointment time: </label>
+      <input
+        id="appointment-time"
+        type="time"
+        name="appointment-time"
+        value="13:30" />
+      <label for="meeting-time">Choose meeting date and time: </label>
+      <input 
+        id="meeting-time"
+        type="datetime-local" 
+        name="meeting-time"
+        value="2024-12-20T13:30">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Zip Code</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
     <script>
-        // Create nested shadow DOM structure using standard HTML elements
-        function createShadowContainer(content, styles = '') {
-            const container = document.createElement('div');
-            const shadow = container.attachShadow({ mode: 'open' });
-            
-            const style = document.createElement('style');
-            style.textContent = styles;
-            shadow.appendChild(style);
-            
-            if (typeof content === 'string') {
-                shadow.innerHTML += content;
-            } else if (content instanceof Node) {
-                shadow.appendChild(content);
-            }
-            
-            return container;
+      const tableBody = document.getElementById("table-body");
+
+      for (let i = 1; i <= 1000; i++) {
+        const row = document.createElement("tr");
+
+        for (let j = 1; j <= 10; j++) {
+          const cell = document.createElement("td");
+          cell.textContent = Data `${i}-${j}`;
+          row.appendChild(cell);
         }
 
-        // Create the main container
-        const rootContainer = document.getElementById('root-container');
-        
-        // Level 1: Main container with shadow DOM
-        const mainContainer = createShadowContainer('', `
-            .container {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-            }
-            th {
-                background-color: #f5f5f5;
-            }
-        `);
-
-        // Level 2: Table container with its own shadow DOM
-        const tableContainer = createShadowContainer(`
-            <div class="container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-        `);
-
-        // Add some sample data with nested shadow DOM for each row
-        const tbody = tableContainer.shadowRoot.querySelector('#table-body');
-
-        for (let i = 1; i <= 10; i++) {
-            // Level 3: Row container with shadow DOM
-            const rowContainer = createShadowContainer(`
-                <tr>
-                    <td>${i}</td>
-                    <td>Name ${i}</td>
-                    <td>email${i}@example.com</td>
-                </tr>
-            `);
-            tbody.appendChild(rowContainer);
-        }
-
-        mainContainer.shadowRoot.appendChild(tableContainer);
-        rootContainer.appendChild(mainContainer);
+        tableBody.appendChild(row);
+      }
     </script>
-</body>
+  </body>
 </html>
