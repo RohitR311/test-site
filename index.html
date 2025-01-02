@@ -1,92 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Static Data Table</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #f0f0f0;
-      }
-      .container {
-        width: 90%;
-      }
-      table {
-        border-collapse: collapse;
-        width: 90%;
-        margin: 20px 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-      }
-      tr:nth-child(even) {
-        background-color: #f9f9f9;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <label for="appointment-time">Choose an appointment time: </label>
-      <input
-        id="appointment-time"
-        type="time"
-        name="appointment-time"
-        value="13:30" />
-      <label for="meeting-time">Choose meeting date and time: </label>
-      <input 
-        id="meeting-time"
-        type="datetime-local" 
-        name="meeting-time"
-        value="2024-12-20T13:30">
-      <table>
+    <title>Nested Shadow DOM Data Table</title>
+</head>
+<body>
+    <!-- Root Component -->
+    <table-app apptitle="DATA TABLE">
+        <template id="table-app-template">
+            <style>
+                :host {
+                    display: block;
+                    font-family: Arial, sans-serif;
+                }
+                .container {
+                    width: 90%;
+                    margin: 0 auto;
+                    background-color: #f0f0f0;
+                    padding: 20px;
+                }
+            </style>
+            <div class="container">
+                <time-input-section></time-input-section>
+                <data-table></data-table>
+            </div>
+        </template>
+    </table-app>
+
+    <!-- Time Input Section Template -->
+    <template id="time-input-template">
+        <style>
+            :host {
+                display: block;
+                margin: 20px 0;
+            }
+            .time-inputs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .input-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        </style>
+        <div class="time-inputs">
+            <time-input-item type="time" label="Choose an appointment time:" id="appointment-time" value="13:30"></time-input-item>
+            <time-input-item type="datetime-local" label="Choose meeting date and time:" id="meeting-time" value="2024-12-20T13:30"></time-input-item>
+        </div>
+    </template>
+
+    <!-- Time Input Item Template -->
+    <template id="time-input-item-template">
+        <style>
+            :host {
+                display: inline-block;
+            }
+            .input-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            label {
+                font-weight: 500;
+            }
+            input {
+                padding: 5px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+        </style>
+        <div class="input-group">
+            <label></label>
+            <input>
+        </div>
+    </template>
+
+    <!-- Data Table Template -->
+    <template id="data-table-template">
+        <style>
+            :host {
+                display: block;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 20px 0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                background-color: white;
+            }
+        </style>
+        <table>
+            <table-header></table-header>
+            <table-body></table-body>
+        </table>
+    </template>
+
+    <!-- Table Header Template -->
+    <template id="table-header-template">
+        <style>
+            :host {
+                display: table-header-group;
+            }
+            th {
+                background-color: #f2f2f2;
+                border: 1px solid #ddd;
+                padding: 12px 8px;
+                text-align: left;
+                font-weight: bold;
+            }
+        </style>
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Country</th>
-            <th>Zip Code</th>
-            <th>Comments</th>
-          </tr>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>Zip Code</th>
+                <th>Comments</th>
+            </tr>
         </thead>
+    </template>
+
+    <!-- Table Body Template -->
+    <template id="table-body-template">
+        <style>
+            :host {
+                display: table-row-group;
+            }
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+        </style>
         <tbody id="table-body">
-          <!-- Rows will be inserted here by JavaScript -->
         </tbody>
-      </table>
-    </div>
+    </template>
+
     <script>
-      const tableBody = document.getElementById("table-body");
+        // Base class for all shadow components
+        class ShadowComponent extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+            }
 
-      for (let i = 1; i <= 1000; i++) {
-        const row = document.createElement("tr");
-
-        for (let j = 1; j <= 10; j++) {
-          const cell = document.createElement("td");
-          cell.textContent = Data `${i}-${j}`;
-          row.appendChild(cell);
+            connectedCallback() {
+                const template = document.getElementById(this.templateId);
+                if (template) {
+                    this.shadowRoot.appendChild(template.content.cloneNode(true));
+                }
+            }
         }
 
-        tableBody.appendChild(row);
-      }
+        // Root App Component
+        class TableApp extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'table-app-template';
+            }
+
+            static get observedAttributes() {
+                return ['apptitle'];
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (name === 'apptitle') {
+                    document.title = newValue;
+                }
+            }
+        }
+
+        // Time Input Section Component
+        class TimeInputSection extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'time-input-template';
+            }
+        }
+
+        // Time Input Item Component
+        class TimeInputItem extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'time-input-item-template';
+            }
+
+            static get observedAttributes() {
+                return ['type', 'label', 'id', 'value'];
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                this.updateInput();
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (this.shadowRoot) {
+                    this.updateInput();
+                }
+            }
+
+            updateInput() {
+                const label = this.shadowRoot.querySelector('label');
+                const input = this.shadowRoot.querySelector('input');
+                
+                label.textContent = this.getAttribute('label');
+                input.type = this.getAttribute('type');
+                input.id = this.getAttribute('id');
+                input.value = this.getAttribute('value');
+            }
+        }
+
+        // Data Table Component
+        class DataTable extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'data-table-template';
+            }
+        }
+
+        // Table Header Component
+        class TableHeader extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'table-header-template';
+            }
+        }
+
+        // Table Body Component
+        class TableBody extends ShadowComponent {
+            constructor() {
+                super();
+                this.templateId = 'table-body-template';
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                this.generateRows();
+            }
+
+            generateRows() {
+                const tableBody = this.shadowRoot.getElementById('table-body');
+                
+                for (let i = 1; i <= 1000; i++) {
+                    const row = document.createElement('tr');
+                    
+                    for (let j = 1; j <= 10; j++) {
+                        const cell = document.createElement('td');
+                        cell.textContent = `Data ${i}-${j}`;
+                        row.appendChild(cell);
+                    }
+                    
+                    tableBody.appendChild(row);
+                }
+            }
+        }
+
+        // Register all custom elements
+        customElements.define('table-app', TableApp);
+        customElements.define('time-input-section', TimeInputSection);
+        customElements.define('time-input-item', TimeInputItem);
+        customElements.define('data-table', DataTable);
+        customElements.define('table-header', TableHeader);
+        customElements.define('table-body', TableBody);
     </script>
-  </body>
+</body>
 </html>
